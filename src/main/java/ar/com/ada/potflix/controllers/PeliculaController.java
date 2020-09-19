@@ -29,7 +29,7 @@ public class PeliculaController {
         }
         GenericResponse gR = new GenericResponse();
         gR.isOk = true;
-        gR.id = pelicula.get_id().toHexString();
+        gR.id = pelicula.get_id();
         gR.mensaje = "La pelicula fue añadida exitosamente";
         return ResponseEntity.ok(gR);
 
@@ -75,7 +75,7 @@ public class PeliculaController {
                 return ResponseEntity.badRequest().build();
             } else {
                 GenericResponse gR = new GenericResponse();
-                gR.id = peliModificada.get_id().toHexString();
+                gR.id = peliModificada.get_id();
                 gR.isOk = true;
                 gR.mensaje = "Los datos de la pelicula fueron actualizados exitosamente";
 
@@ -95,7 +95,7 @@ ResponseEntity<GenericResponse> calificarLaPelicula(@PathVariable ObjectId id, d
     }else{
        Pelicula peliCalificada = pS.calificarPelicula(pelicula,calificacion);
        GenericResponse gR = new GenericResponse();
-       gR.id = peliCalificada.get_id().toHexString();
+       gR.id = peliCalificada.get_id();
        gR.isOk = true;
        gR.mensaje = "enviaste tu calificacion exitosamente, el puntaje de la pelicula es: "+ peliCalificada.getCalificacion();
        return ResponseEntity.ok(gR);

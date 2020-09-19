@@ -2,15 +2,23 @@ package ar.com.ada.potflix.entities;
 
 import java.util.*;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 public class Contenido {
     
+    private ObjectId _id;
 
+    @Field(order = 1)
     private String titulo;
+
     private ArrayList<String> premios = new ArrayList<>();
+    @Field(order = 2)
     private Director director;
     private double tiempoVisto;
     private List<Genero> generos = new ArrayList<>();
     private double calificacion;
+    @Field(order = 3)
     private List<Actor> actores = new ArrayList<>();
 
     public String getTitulo() {
@@ -67,6 +75,14 @@ public class Contenido {
 
     public void setActores(List<Actor> actores) {
         this.actores = actores;
+    }
+
+    public String get_id() {
+        return _id.toHexString();
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
     }
 
     

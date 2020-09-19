@@ -1,22 +1,15 @@
 package ar.com.ada.potflix.entities;
 
 import java.util.*;
-import org.bson.types.ObjectId;
+
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "series")
 public class Serie extends Contenido{
     
-    private ObjectId _id;
+    @Field(order = 10)
     private List<Temporada> temporadas = new ArrayList<>();
-
-    public ObjectId get_id() {
-        return _id;
-    }
-
-    public void set_id(ObjectId _id) {
-        this._id = _id;
-    }
 
     public List<Temporada> getTemporadas() {
         return temporadas;

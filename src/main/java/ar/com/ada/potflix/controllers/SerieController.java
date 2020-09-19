@@ -2,11 +2,13 @@ package ar.com.ada.potflix.controllers;
 
 import java.util.*;
 
+import org.apache.catalina.connector.Response;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ar.com.ada.potflix.entities.Episodio;
 import ar.com.ada.potflix.entities.Serie;
 import ar.com.ada.potflix.entities.Temporada;
 import ar.com.ada.potflix.models.request.ModifSerie;
@@ -31,7 +33,7 @@ public class SerieController {
         }
         GenericResponse gR = new GenericResponse();
         gR.isOk = true;
-        gR.id = serie.get_id().toHexString();
+        gR.id = serie.get_id();
         gR.mensaje = "La Serie fue añadida exitosamente";
         return ResponseEntity.ok(gR);
 
@@ -56,24 +58,42 @@ public class SerieController {
     }
 
     // /series?genero=Ciencia%20Ficción
-    @GetMapping("/peliculas/genero/{genero}")
+    @GetMapping("/series/genero/{genero}")
     public ResponseEntity<List<Serie>> traerSeriesPorGenero(@PathVariable String genero) {
 
         return ResponseEntity.ok(sS.buscarPorGenero(genero));
 
     }
 
-    @GetMapping("/serie/temporadas/{id}")
+    @GetMapping("/series/temporadas/{id}")
     public ResponseEntity<List<Temporada>> traerTemporadasPorSerieId(@PathVariable ObjectId id) {
 
         return ResponseEntity.ok(sS.traerTemporadasPorSerieId(id));
     } 
 
-  
+  //
+  @GetMapping("/series/{id}/episodios")
+  public ResponseEntity<List<Episodio>> traerEpisodios(@PathVariable ObjectId id) {
+
+      return ResponseEntity.ok(sS.obtenerEpisodiosSerie(id));
+
+  }
+
+  //@GetMapping("/series/{id}/temporadas/{nroTemporada}/episodios/{nroEpisodio}")
+  @GetMapping("/series/{id}/episodios/{nroTemporada}-{nroEpisodio}")
+  public ResponseEntity<Episodio> traerEpisodio(@PathVariable ObjectId id, @PathVariable int nroTemporada,
+          @PathVariable int nroEpisodio) {
+
+      Episodio episodio = sS.obtenerEpisodioPorNroEpisodio(id, nroTemporada, nroEpisodio);
+      if (episodio == null)
+          return ResponseEntity.notFound().build();
+      return ResponseEntity.ok(episodio);
+
+  }
 
 
-    @PutMapping("/peliculas/{id}")
-    public ResponseEntity<GenericResponse> modificarPelicula(@PathVariable ObjectId id, ModifSerie modifSerie) {
+    @PutMapping("/series/{id}")
+    public ResponseEntity<GenericResponse> modificarSerie(@PathVariable ObjectId id, ModifSerie modifSerie) {
         Serie serie = sS.buscarPorId(id);
         if (serie == null) {
             return ResponseEntity.notFound().build();
@@ -86,7 +106,7 @@ public class SerieController {
                 return ResponseEntity.badRequest().build();
             } else {
                 GenericResponse gR = new GenericResponse();
-                gR.id = serieModificada.get_id().toHexString();
+                gR.id = serieModificada.get_id();
                 gR.isOk = true;
                 gR.mensaje = "Los datos de la Serie fueron actualizados exitosamente";
 
@@ -97,7 +117,7 @@ public class SerieController {
     }
 
 
-@PutMapping("/peliculas/calificacion/{id}")
+@PutMapping("/series/calificacion/{id}")
 ResponseEntity<GenericResponse> calificarLaSerie(@PathVariable ObjectId id, double calificacion){
 
     Serie serie = sS.buscarPorId(id);
@@ -106,7 +126,7 @@ ResponseEntity<GenericResponse> calificarLaSerie(@PathVariable ObjectId id, doub
     }else{
        Serie serieCalificada = sS.calificarSerie(serie, calificacion);
        GenericResponse gR = new GenericResponse();
-       gR.id = serieCalificada.get_id().toHexString();
+       gR.id = serieCalificada.get_id();
        gR.isOk = true;
        gR.mensaje = "enviaste tu calificacion exitosamente, el puntaje de la Serie es: "+ serieCalificada.getCalificacion();
        return ResponseEntity.ok(gR);
