@@ -93,7 +93,7 @@ public class SerieService {
         return buscarPorId(id).getTemporadas();
     }
 
-    public Serie modificarPelicula(Serie serie, ModifSerie modifSerie) {
+    public Serie modificarSerie(Serie serie, ModifSerie modifSerie) {
 
         serie.setTitulo(modifSerie.titulo);
         serie.setGeneros(modifSerie.generos);

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ar.com.ada.potflix.entities.Episodio;
 import ar.com.ada.potflix.entities.Serie;
 import ar.com.ada.potflix.entities.Temporada;
 import ar.com.ada.potflix.models.request.ModifSerie;
@@ -56,24 +57,28 @@ public class SerieController {
     }
 
     // /series?genero=Ciencia%20Ficción
-    @GetMapping("/peliculas/genero/{genero}")
+    @GetMapping("/series/genero/{genero}")
     public ResponseEntity<List<Serie>> traerSeriesPorGenero(@PathVariable String genero) {
 
         return ResponseEntity.ok(sS.buscarPorGenero(genero));
 
     }
 
-    @GetMapping("/serie/temporadas/{id}")
-    public ResponseEntity<List<Temporada>> traerTemporadasPorSerieId(@PathVariable ObjectId id) {
+    @GetMapping("/serie/{id_serie}/temporadas")
+    public ResponseEntity<List<Temporada>> traerTemporadasPorSerieId(@PathVariable(value = "id_serie") ObjectId id) {
 
         return ResponseEntity.ok(sS.traerTemporadasPorSerieId(id));
     } 
+    // @GetMapping("/serie/{id_serie}/temporadas/{id_temporada}/episodios")
+    // public ResponseEntity<List<Episodio>> traerEpisodiosPorNumeroTemporada(@PathVariable(value = "id_serie") ObjectId id, ) {
 
+    //     return ResponseEntity.ok(sS.traerTemporadasPorSerieId(id));
+    // } 
   
 
 
-    @PutMapping("/peliculas/{id}")
-    public ResponseEntity<GenericResponse> modificarPelicula(@PathVariable ObjectId id, ModifSerie modifSerie) {
+    @PutMapping("/series/{id}")
+    public ResponseEntity<GenericResponse> modificarSerie(@PathVariable ObjectId id, ModifSerie modifSerie) {
         Serie serie = sS.buscarPorId(id);
         if (serie == null) {
             return ResponseEntity.notFound().build();
@@ -81,7 +86,7 @@ public class SerieController {
 
         else {
 
-            Serie serieModificada = sS.modificarPelicula(serie, modifSerie);
+            Serie serieModificada = sS.modificarSerie(serie, modifSerie);
             if (serieModificada == null) {
                 return ResponseEntity.badRequest().build();
             } else {
@@ -97,7 +102,7 @@ public class SerieController {
     }
 
 
-@PutMapping("/peliculas/calificacion/{id}")
+@PutMapping("/series/calificacion/{id}")
 ResponseEntity<GenericResponse> calificarLaSerie(@PathVariable ObjectId id, double calificacion){
 
     Serie serie = sS.buscarPorId(id);
